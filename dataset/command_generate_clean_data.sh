@@ -1,0 +1,1 @@
+python generate_clean_data.py --dataset_root /hpcfiles/users/guihaiyuan/data/Benchmark/graspnet --num_workers 30  --camera kinect
