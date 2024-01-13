@@ -4,11 +4,10 @@ import operator as op
 import functools
 import torch
 from torch.autograd import Variable, Function
-# from knn_pytorch import knn_pytorch
-from vision_sandbox import _C
+from KNN import _C
 knn = _C.knn
 
-# import knn_pytorch
+
 def myknn(ref, query, k=1):
   """ Compute k nearest neighbors for each query point.
   """

@@ -15,7 +15,7 @@ requirements = ["torch", "torchvision"]
 
 def get_extensions():
     this_dir = os.path.dirname(os.path.abspath(__file__))
-    extensions_dir = os.path.join(this_dir, "torch_ops")
+    extensions_dir = os.path.join(this_dir, "Pytorch_CUDA_KNN")
 
     main_file = glob.glob(os.path.join(extensions_dir, "*.cpp"))
     source_cpu = glob.glob(os.path.join(extensions_dir, "cpu", "*.cpp"))
@@ -44,7 +44,7 @@ def get_extensions():
 
     ext_modules = [
         extension(
-            "vision_sandbox._C",
+            "KNN._C",
             sources,
             include_dirs=include_dirs,
             define_macros=define_macros,
@@ -56,11 +56,11 @@ def get_extensions():
 
 
 setup(
-    name="vision_sandbox",
-    version="0.1",
-    author="foolyc",
-    url="https://github.com/foolyc/vision-sandbox",
-    description="in-door 3D object detection and pose estimation in pytorch",
+    name="KNN",
+    version="1.0",
+    author="Haiyuan Gui",
+    url="https://github.com/upc-ghy/KNN",
+    description="KNN implemented using cuda programming in pytorch framework",
     ext_modules=get_extensions(),
     cmdclass={"build_ext": torch.utils.cpp_extension.BuildExtension},
 )

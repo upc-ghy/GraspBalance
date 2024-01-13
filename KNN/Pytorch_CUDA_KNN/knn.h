@@ -23,9 +23,6 @@ int knn(at::Tensor& ref, at::Tensor& query, at::Tensor& idx)
     float *query_dev = query.data<float>();
     long *idx_dev = idx.data<long>();
 
-
-
-
   if (ref.type().is_cuda()) {
 #ifdef WITH_CUDA
     // TODO raise error if not compiled with CUDA

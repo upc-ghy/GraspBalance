@@ -2,7 +2,7 @@ import unittest
 import torch
 from torch.autograd import Variable, Function
 
-from vision_sandbox import _C
+from KNN import _C
 knn = _C.knn
 
 class TestKNearestNeighbor(unittest.TestCase):
