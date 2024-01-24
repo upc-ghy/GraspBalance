@@ -9,22 +9,6 @@ THRESH_BAD = 0.1
 # THRESH_GOOD = 1.2
 
 def transform_point_cloud(cloud, transform, format='4x4'):
-    """ Transform points to new coordinates with transformation matrix.
-
-        Input:
-            cloud: [torch.FloatTensor, (N,3)]
-                points in original coordinates
-            transform: [torch.FloatTensor, (3,3)/(3,4)/(4,4)]
-                transformation matrix, could be rotation only or rotation+translation
-            format: [string, '3x3'/'3x4'/'4x4']
-                the shape of transformation matrix
-                '3x3' --> rotation matrix
-                '3x4'/'4x4' --> rotation matrix + translation matrix
-
-        Output:
-            cloud_transformed: [torch.FloatTensor, (N,3)]
-                points in new coordinates
-    """
     if not (format == '3x3' or format == '4x4' or format == '3x4'):
         raise ValueError('Unknown transformation format, only support \'3x3\' or \'4x4\' or \'3x4\'.')
     if format == '3x3':
@@ -37,23 +21,6 @@ def transform_point_cloud(cloud, transform, format='4x4'):
     return cloud_transformed
 
 def generate_grasp_views(N=300, phi=(np.sqrt(5)-1)/2, center=np.zeros(3), r=1):
-    """ View sampling on a unit sphere using Fibonacci lattices.
-        Ref: https://arxiv.org/abs/0912.4540
-
-        Input:
-            N: [int]
-                number of sampled views
-            phi: [float]
-                constant for view coordinate calculation, different phi's bring different distributions, default: (sqrt(5)-1)/2
-            center: [np.ndarray, (3,), np.float32]
-                sphere center
-            r: [float]
-                sphere radius
-
-        Output:
-            views: [torch.FloatTensor, (N,3)]
-                sampled view coordinates
-    """
     views = []
     for i in range(N):
         zi = (2 * i + 1) / N - 1
@@ -64,18 +31,6 @@ def generate_grasp_views(N=300, phi=(np.sqrt(5)-1)/2, center=np.zeros(3), r=1):
     return torch.from_numpy(views.astype(np.float32))
 
 def batch_viewpoint_params_to_matrix(batch_towards, batch_angle):
-    """ Transform approach vectors and in-plane rotation angles to rotation matrices.
-
-        Input:
-            batch_towards: [torch.FloatTensor, (N,3)]
-                approach vectors in batch
-            batch_angle: [torch.floatTensor, (N,)]
-                in-plane rotation angles in batch
-                
-        Output:
-            batch_matrix: [torch.floatTensor, (N,3,3)]
-                rotation matrices in batch
-    """
     axis_x = batch_towards
     ones = torch.ones(axis_x.shape[0], dtype=axis_x.dtype, device=axis_x.device)
     zeros = torch.zeros(axis_x.shape[0], dtype=axis_x.dtype, device=axis_x.device)
@@ -121,17 +76,6 @@ from torch import nn
 from torch.nn import functional as F
 
 class FocalLoss_Ori(nn.Module):
-    """
-    This is a implementation of Focal Loss with smooth label cross entropy supported which is proposed in
-    'Focal Loss for Dense Object Detection. (https://arxiv.org/abs/1708.02002)'
-    Focal_Loss= -1*alpha*((1-pt)**gamma)*log(pt)
-    Args:
-        num_class: number of classes
-        alpha: class balance factor
-        gamma:
-        ignore_index:
-        reduction:
-    """
 
     def __init__(self, num_class, alpha=None, gamma=2, ignore_index=None, reduction='mean'):
         super(FocalLoss_Ori, self).__init__()
@@ -150,20 +94,6 @@ class FocalLoss_Ori(nn.Module):
         if self.alpha.shape[0] != num_class:
             raise RuntimeError('the length not equal to number of class')
 
-        # if isinstance(self.alpha, (list, tuple, np.ndarray)):
-        #     assert len(self.alpha) == self.num_class
-        #     self.alpha = torch.Tensor(list(self.alpha))
-        # elif isinstance(self.alpha, (float, int)):
-        #     assert 0 < self.alpha < 1.0, 'alpha should be in `(0,1)`)'
-        #     assert balance_index > -1
-        #     alpha = torch.ones((self.num_class))
-        #     alpha *= 1 - self.alpha
-        #     alpha[balance_index] = self.alpha
-        #     self.alpha = alpha
-        # elif isinstance(self.alpha, torch.Tensor):
-        #     self.alpha = self.alpha
-        # else:
-        #     raise TypeError('Not support alpha type, expect `int|float|list|tuple|torch.Tensor`')
 
     def forward(self, logit, target):
         # assert isinstance(self.alpha,torch.Tensor)\
@@ -203,17 +133,6 @@ class FocalLoss_Ori(nn.Module):
         return loss
 
 class BinaryFocalLoss(nn.Module):
-    """
-    This is a implementation of Focal Loss with smooth label cross entropy supported which is proposed in
-    'Focal Loss for Dense Object Detection. (https://arxiv.org/abs/1708.02002)'
-        Focal_Loss= -1*alpha*(1-pt)*log(pt)
-    :param alpha: (tensor) 3D or 4D the scalar factor for this criterion
-    :param gamma: (float,double) gamma > 0 reduces the relative loss for well-classified examples (p>0.5) putting more
-                    focus on hard misclassified example
-    :param reduction: `none`|`mean`|`sum`
-    :param **kwargs
-        balance_index: (int) balance class index, should be specific when alpha is float
-    """
 
     def __init__(self, alpha=3, gamma=2, ignore_index=None, reduction='mean', **kwargs):
         super(BinaryFocalLoss, self).__init__()
@@ -225,18 +144,6 @@ class BinaryFocalLoss(nn.Module):
 
         assert self.reduction in ['none', 'mean', 'sum']
 
-        # if self.alpha is None:
-        #     self.alpha = torch.ones(2)
-        # elif isinstance(self.alpha, (list, np.ndarray)):
-        #     self.alpha = np.asarray(self.alpha)
-        #     self.alpha = np.reshape(self.alpha, (2))
-        #     assert self.alpha.shape[0] == 2, \
-        #         'the `alpha` shape is not match the number of class'
-        # elif isinstance(self.alpha, (float, int)):
-        #     self.alpha = np.asarray([self.alpha, 1.0 - self.alpha], dtype=np.float).view(2)
-
-        # else:
-        #     raise TypeError('{} not supported'.format(type(self.alpha)))
 
     def forward(self, output, target):
         prob = torch.sigmoid(output)
