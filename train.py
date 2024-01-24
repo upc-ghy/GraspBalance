@@ -38,7 +38,6 @@ parser.add_argument('--num_workers', type=int, default=2, help='workers num duri
 parser.add_argument('--NcM', default=True, help="whether use NcM")
 cfgs = parser.parse_args()
 
-# ------------------------------------------------------------------------- GLOBAL CONFIG BEG
 EPOCH_CNT = 0
 LR_DECAY_STEPS = [int(x) for x in cfgs.lr_decay_steps.split(',')]
 LR_DECAY_RATES = [float(x) for x in cfgs.lr_decay_rates.split(',')]
@@ -60,7 +59,6 @@ def log_string(out_str):
     print(out_str)
 
 
-# Init datasets and dataloaders
 def my_worker_init_fn(worker_id):
     np.random.seed(np.random.get_state()[1][0] + worker_id)
     pass
@@ -77,16 +75,13 @@ else:
 TEST_DATASET = GraspNetDataset(cfgs.dataset_root, valid_obj_idxs, grasp_labels, camera=cfgs.camera, split='test_seen',
                                num_points=cfgs.num_point, remove_outlier=True, augment=False)
 
-# print(len(TRAIN_DATASET), len(TEST_DATASET))
-print(len(TRAIN_DATASET))
+
 TRAIN_DATALOADER = DataLoader(TRAIN_DATASET, batch_size=cfgs.batch_size, shuffle=True,
                               num_workers=cfgs.num_workers, worker_init_fn=my_worker_init_fn, collate_fn=collate_fn)
 TEST_DATALOADER = DataLoader(TEST_DATASET, batch_size=cfgs.batch_size, shuffle=False,
                              num_workers=cfgs.num_workers, worker_init_fn=my_worker_init_fn, collate_fn=collate_fn)
-print(len(TRAIN_DATALOADER), len(TEST_DATALOADER))
-# print(len(TRAIN_DATALOADER))
 
-# Init the model and optimzier
+
 
 from graspnet import GraspNet_MSCQ
 from loss import get_loss
@@ -97,10 +92,8 @@ net = GraspNet_MSCQ(input_feature_dim=0, num_view=cfgs.num_view, num_angle=12, n
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 net.to(device)
 
-# Load the Adam optimizer
 optimizer = optim.Adam(net.parameters(), lr=cfgs.learning_rate, weight_decay=cfgs.weight_decay)
 
-# Load checkpoint if there is any
 it = -1  # for the initialize value of `LambdaLR` and `BNMomentumScheduler`
 start_epoch = 0
 if CHECKPOINT_PATH is not None and os.path.isfile(CHECKPOINT_PATH):
@@ -109,15 +102,11 @@ if CHECKPOINT_PATH is not None and os.path.isfile(CHECKPOINT_PATH):
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     start_epoch = checkpoint['epoch']
     log_string("-> loaded checkpoint %s (epoch: %d)" % (CHECKPOINT_PATH, start_epoch))
-# Decay Batchnorm momentum from 0.5 to 0.999
-# note: pytorch's BN momentum (default 0.1)= 1 - tensorflow's BN momentum
 
 from torch.optim.lr_scheduler import OneCycleLR
 
-#resume train
 scheduler = OneCycleLR(optimizer, max_lr=cfgs.learning_rate, steps_per_epoch=len(TRAIN_DATALOADER),
                        epochs=cfgs.max_epoch, last_epoch=start_epoch * len(TRAIN_DATALOADER)-1)
-
 
 BN_MOMENTUM_INIT = 0.5
 BN_MOMENTUM_MAX = 0.001
@@ -132,26 +121,20 @@ def get_current_lr(epoch):
             lr *= LR_DECAY_RATES[i]
     return lr
 
-
 def adjust_learning_rate(optimizer, epoch):
     lr = get_current_lr(epoch)
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
 
-# TensorBoard Visualizers
 TRAIN_WRITER = SummaryWriter(os.path.join(cfgs.log_dir, 'train'))
 TEST_WRITER = SummaryWriter(os.path.join(cfgs.log_dir, 'test'))
 
 
-
-# ------------------------------------------------------------------------- GLOBAL CONFIG END
-
 def train_one_epoch():
     stat_dict = {}  # collect statistics
     #adjust_learning_rate(optimizer, EPOCH_CNT)
-    bnm_scheduler.step()  # decay BN momentum
-    # set model to training mode
+    bnm_scheduler.step()
     net.train()
     for batch_idx, batch_data_label in enumerate(TRAIN_DATALOADER):
         for key in batch_data_label:
@@ -162,10 +145,8 @@ def train_one_epoch():
             else:
                 batch_data_label[key] = batch_data_label[key].to(device)
 
-        # Forward pass
         end_points = net(batch_data_label)
 
-        # Compute loss and gradients, update parameters.
         end_points['epoch'] = EPOCH_CNT
         loss, end_points = get_loss(end_points)
         loss.backward()
@@ -174,7 +155,6 @@ def train_one_epoch():
             optimizer.zero_grad()
             scheduler.step()
 
-        # Accumulate statistics and print out
         for key in end_points:
             if 'loss' in key or 'acc' in key or 'prec' in key or 'recall' in key or 'count' in key:
                 if key not in stat_dict: stat_dict[key] = 0
@@ -195,7 +175,6 @@ def train_one_epoch():
                                     (EPOCH_CNT * len(TRAIN_DATALOADER) + batch_idx) * cfgs.batch_size)
 
 
-
 def evaluate_one_epoch():
     stat_dict = {}  # collect statistics
     # set model to eval mode (for bn and dp)
@@ -211,15 +190,12 @@ def evaluate_one_epoch():
             else:
                 batch_data_label[key] = batch_data_label[key].to(device)
 
-        # Forward pass
         with torch.no_grad():
             end_points = net(batch_data_label)
 
-        # Compute loss
         end_points['epoch'] = EPOCH_CNT
         loss, end_points = get_loss(end_points)
 
-        # Accumulate statistics and print out
         for key in end_points:
             if 'loss' in key or 'acc' in key or 'prec' in key or 'recall' in key or 'count' in key:
                 if key not in stat_dict: stat_dict[key] = 0
@@ -244,17 +220,15 @@ def train(start_epoch):
         log_string('Current learning rate: %f' % (optimizer.param_groups[0]['lr']))
         log_string('Current BN decay momentum: %f' % (bnm_scheduler.lmbd(bnm_scheduler.last_epoch)))
         log_string(str(datetime.now()))
-        # Reset numpy seed.
-        # REF: https://github.com/pytorch/pytorch/issues/5059
         np.random.seed()
         train_one_epoch()
         loss = evaluate_one_epoch()
         # Save checkpoint
-        save_dict = {'epoch': epoch + 1,  # after training one epoch, the start_epoch should be epoch+1
+        save_dict = {'epoch': epoch + 1, 
                      'optimizer_state_dict': optimizer.state_dict(),
                      'loss': loss,
                      }
-        try:  # with nn.DataParallel() the net is added as a submodule of DataParallel
+        try:
             save_dict['model_state_dict'] = net.module.state_dict()
         except:
             save_dict['model_state_dict'] = net.state_dict()
