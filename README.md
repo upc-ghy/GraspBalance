@@ -5,6 +5,7 @@ GraspBalance: 7-DoF Grasp Pose Detection with Multi-scale Object Balanced in Clu
 ### 1. 创建一个虚拟环境
 ~~~shell
 conda create -n grasp python=3.7
+~~~~
 
 ### 7. Configure KNN (K-nearest neighbors) accelerated using cuda programming:
 
