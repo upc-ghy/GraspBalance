@@ -328,3 +328,15 @@ git clone https://github.com/graspnet/graspnetAPI.git
 cd graspnetAPI
 pip install .
 ~~~
+
+
+# Contact information of some authors:
+
+**Haiyuan Gui:** guihaiyuan736570@gmail.com
+
+**Shanchen Pang:** pangsc@upc.edu.cn
+
+**Xiao He:** xiao_he2022@126.com
+
+
+
