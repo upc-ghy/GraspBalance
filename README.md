@@ -5,9 +5,9 @@ Object grasping constitutes a fundamental function in robotics. Currently, exist
 
 ![grasp_pose_detection](https://github.com/upc-ghy/GraspBalance/raw/main/grasp_pose_detection.png)
 
-### Real Experiments
+## Real Experiments
 ![Real Robot Grasp](https://github.com/upc-ghy/GraspBalance/raw/main/real_robot_experiment_setup.png)
-#### Franka Grasp Experiment Environment
+### Franka Grasp Experiment Environment
 
 1. Ubuntu 20.04 (Our PC is installed with ubuntu system, you can choose other systems according to your needs.)
 
@@ -34,7 +34,7 @@ roslaunch panda_moveit_config franka_control.launch robot_ip:=172.16.3.69
 
 9. Write Franka and RealSense control code (The algorithm predicts the grasping position in the camera coordinate system, converts it to a position in the Franka robot coordinate system, and controls the robot to move to that position for object grasping and placing into the storage box.)
 
-
+## Algorithm Training
 ### 1. Algorithm Training Environment
 ~~~shell
 [HaiyuanGui@master01 ~]$ conda list
