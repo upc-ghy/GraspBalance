@@ -35,7 +35,7 @@ roslaunch panda_moveit_config franka_control.launch robot_ip:=172.16.3.69
 9. Write Franka and RealSense control code (The algorithm predicts the grasping position in the camera coordinate system, converts it to a position in the Franka robot coordinate system, and controls the robot to move to that position for object grasping and placing into the storage box.)
 
 
-### 1. Environment
+### 1. Algorithm Training Environment
 ~~~shell
 [HaiyuanGui@master01 ~]$ conda list
 # packages in environment at /hpcfiles/users/HaiyuanGui/.conda/envs/GraspBalance:
