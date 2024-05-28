@@ -3,7 +3,7 @@
 
 Object grasping constitutes a fundamental function in robotics. Currently, existing algorithms predominantly focus on enhancing the adaptability of robots in unstructured environments by optimizing the overall accuracy of grasp pose detection. However, they overlook the imbalance in the difficulty of grasp pose detection for objects of different scales. This paper introduces a multi-scale objects 7-DoF grasp pose balanced detection algorithm to mitigate the significant variance in grasp pose detection across objects of varying scales. Specifically, we introduce a deep residual PointNet++ encoder for extracting depth-integrated global semantic features from scene point cloud. Meanwhile, we design a multi-scale grasp width grouping feature extraction module to acquire multi-scale local geometric feature under different receptive fields. We fuse global and multi-scale local geometric features to provide a more balanced feature set for grasp pose detection. In addition, we also design a multi-scale weight balanced loss function to realize the balanced training of multi-scale objects with different apriori weights. Our algorithm significantly improves the detection accuracy of small-scale objects on the GraspNet-1Billion benchmark, which outperforms the baseline GraspNet by 12.71\%, 8.35\%, and 7.04\% on the seen, similar, and novel test sets, respectively. On the real Franka Emika 7-axis robot, our algorithm has achieved a 91.79\% success rate in grasping multi-scale unseen objects in cluttered scenes. Our project is available at: https://upc-ghy.github.io/Franka-Grasp.
 
-
+![Real Robot Grasp](https://github.com/upc-ghy/GraspBalance/raw/main/real_robot_experiment_setup.png)
 
 ### 1. Environment
 ~~~shell
