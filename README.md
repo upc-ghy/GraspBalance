@@ -291,7 +291,10 @@ python test.py
 
 ### 3. Configure PointNet++
 ~~~shell
-cd pointnet2
+cd PointNet
+python setup.py install
+
+cd pointnet2_batch
 python setup.py install
 ~~~
 
