@@ -5,36 +5,9 @@ Object grasping constitutes a fundamental function in robotics. Currently, exist
 
 ![grasp_pose_detection](https://github.com/upc-ghy/GraspBalance/raw/main/grasp_pose_detection.png)
 
-## Real Experiments
-![Real Robot Grasp](https://github.com/upc-ghy/GraspBalance/raw/main/real_robot_experiment_setup.png)
-### Franka Grasp Experiment Environment
 
-1. Ubuntu 20.04 (Our PC is installed with ubuntu system, you can choose other systems according to your needs.)
+## Algorithm Training Requirements
 
-2. System real time kernel (Installing a real-time kernel is the key to implementing an operating system to drive Franka's real robots. It is recommended to install a real-time kernel with a similar version of the system's own kernel)
-
-3. Nvidia Graphics Card Drivers (Graphics card drivers that meet the version of the real-time kernel system)
-
-4. Ros Noetic (meet the Ubuntu 20.04)
-
-5. Franka Robot (Install and compile libfranka, install and compile franka_ros. Remember that the version of libfranka is the same as the version of the Franka driver, and franka_ros is installed with the version corresponding to libfranka.)
-
-6. MoveIt (Install moveit)
-Start the franka robot arm correctly, activate the FCI and run franka_control：
-~~~shell
-roslaunch panda_moveit_config franka_control.launch robot_ip:=172.16.3.69
-~~~
-![Franka Control](https://github.com/upc-ghy/GraspBalance/raw/main/franka_control.png)
-
-
-7. RealSense D435i (Install Intel RealSense Viewwe, and librealsense https://github.com/IntelRealSense/librealsense)
-
-8. hand-eye calibration (Find the relationship between the camera coordinate system and the Franka robot coordinate system)
-![Franka Control](https://github.com/upc-ghy/GraspBalance/raw/main/hand-eye_calibration.png)
-
-9. Write Franka and RealSense control code (The algorithm predicts the grasping position in the camera coordinate system, converts it to a position in the Franka robot coordinate system, and controls the robot to move to that position for object grasping and placing into the storage box.)
-
-## Algorithm Training
 ### 1. Algorithm Training Environment
 ~~~shell
 [HaiyuanGui@master01 ~]$ conda list
@@ -328,6 +301,35 @@ git clone https://github.com/graspnet/graspnetAPI.git
 cd graspnetAPI
 pip install .
 ~~~
+
+## Real Experiments
+![Real Robot Grasp](https://github.com/upc-ghy/GraspBalance/raw/main/real_robot_experiment_setup.png)
+### Franka Grasp Experiment Environment
+
+1. Ubuntu 20.04 (Our PC is installed with ubuntu system, you can choose other systems according to your needs.)
+
+2. System real time kernel (Installing a real-time kernel is the key to implementing an operating system to drive Franka's real robots. It is recommended to install a real-time kernel with a similar version of the system's own kernel)
+
+3. Nvidia Graphics Card Drivers (Graphics card drivers that meet the version of the real-time kernel system)
+
+4. Ros Noetic (meet the Ubuntu 20.04)
+
+5. Franka Robot (Install and compile libfranka, install and compile franka_ros. Remember that the version of libfranka is the same as the version of the Franka driver, and franka_ros is installed with the version corresponding to libfranka.)
+
+6. MoveIt (Install moveit)
+Start the franka robot arm correctly, activate the FCI and run franka_control：
+~~~shell
+roslaunch panda_moveit_config franka_control.launch robot_ip:=172.16.3.69
+~~~
+![Franka Control](https://github.com/upc-ghy/GraspBalance/raw/main/franka_control.png)
+
+
+7. RealSense D435i (Install Intel RealSense Viewwe, and librealsense https://github.com/IntelRealSense/librealsense)
+
+8. hand-eye calibration (Find the relationship between the camera coordinate system and the Franka robot coordinate system)
+![Franka Control](https://github.com/upc-ghy/GraspBalance/raw/main/hand-eye_calibration.png)
+
+9. Write Franka and RealSense control code (The algorithm predicts the grasping position in the camera coordinate system, converts it to a position in the Franka robot coordinate system, and controls the robot to move to that position for object grasping and placing into the storage box.)
 
 
 # Contact information of some authors:
