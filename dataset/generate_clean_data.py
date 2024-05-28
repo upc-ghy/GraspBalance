@@ -7,7 +7,6 @@ from PIL import Image
 import argparse
 
 import torch
-# from torch._six import container_abcs
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -283,7 +282,6 @@ if __name__ == "__main__":
     dataset = GraspNetDataset(cfgs.dataset_root, valid_obj_idxs=None, grasp_labels=None, split='train',
                         camera=cfgs.camera,
                         num_points=20000, remove_outlier=True, augment=False, load_label=False)
-    # dataset.save_data(0)
     print(len(dataset))
     pool = multiprocessing.Pool(cfgs.num_workers)
     for i in tqdm(range(len(dataset))):
