@@ -3,7 +3,7 @@
 
 Object grasping constitutes a fundamental function in robotics. Currently, existing algorithms predominantly focus on enhancing the adaptability of robots in unstructured environments by optimizing the overall accuracy of grasp pose detection. However, they overlook the imbalance in the difficulty of grasp pose detection for objects of different scales. This paper introduces a multi-scale objects 7-DoF grasp pose balanced detection algorithm to mitigate the significant variance in grasp pose detection across objects of varying scales. Specifically, we introduce a deep residual PointNet++ encoder for extracting depth-integrated global semantic features from scene point cloud. Meanwhile, we design a multi-scale grasp width grouping feature extraction module to acquire multi-scale local geometric feature under different receptive fields. We fuse global and multi-scale local geometric features to provide a more balanced feature set for grasp pose detection. In addition, we also design a multi-scale weight balanced loss function to realize the balanced training of multi-scale objects with different apriori weights. Our algorithm significantly improves the detection accuracy of small-scale objects on the GraspNet-1Billion benchmark, which outperforms the baseline GraspNet by 12.71\%, 8.35\%, and 7.04\% on the seen, similar, and novel test sets, respectively. On the real Franka Emika 7-axis robot, our algorithm has achieved a 91.79\% success rate in grasping multi-scale unseen objects in cluttered scenes. Our project is available at: https://upc-ghy.github.io/Franka-Grasp.
 
-![Real Robot Grasp](https://github.com/upc-ghy/GraspBalance/raw/main/grasp_pose_detection.png)
+![grasp_pose_detection](https://github.com/upc-ghy/GraspBalance/raw/main/grasp_pose_detection.png)
 
 ### Real Experiments
 ![Real Robot Grasp](https://github.com/upc-ghy/GraspBalance/raw/main/real_robot_experiment_setup.png)
@@ -24,10 +24,13 @@ Start the franka robot arm correctly, activate the FCI and run franka_control：
 ~~~shell
 roslaunch panda_moveit_config franka_control.launch robot_ip:=172.16.3.69
 ~~~
+![Franka Control](https://github.com/upc-ghy/GraspBalance/raw/main/franka_control.png)
+
 
 7. RealSense D435i (Install Intel RealSense Viewwe, and librealsense https://github.com/IntelRealSense/librealsense)
 
 8. hand-eye calibration (Find the relationship between the camera coordinate system and the Franka robot coordinate system)
+![Franka Control](https://github.com/upc-ghy/GraspBalance/raw/main/hand-eye_calibration.png)
 
 9. Write Franka and RealSense control code (The algorithm predicts the grasping position in the camera coordinate system, converts it to a position in the Franka robot coordinate system, and controls the robot to move to that position for object grasping and placing into the storage box.)
 
