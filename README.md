@@ -302,6 +302,18 @@ cd graspnetAPI
 pip install .
 ~~~
 
+### 5. Generate Clean Scene Data
+~~~shell
+cd dataset
+sh command_generate_clean_data.sh
+~~~
+
+### 6. Generation Tolerance Label
+~~~shell
+cd dataset
+sh command_generate_tolerance_label.sh
+~~~
+
 ## Real Experiments
 ![Real Robot Grasp](https://github.com/upc-ghy/GraspBalance/raw/main/real_robot_experiment_setup.png)
 ### Franka Grasp Experiment Environment
