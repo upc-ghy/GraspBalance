@@ -25,13 +25,15 @@ sudo python setup.py install
 python test.py
 ~~~ 
 
-# 3. Configure PointNet++
+### 3. Configure PointNet++
 ~~~shell
 cd pointnet2
 python setup.py install
+~~~
 
-# 4. Configure graspnetAPI (graspnetAPI is a tutorial document for data processing, pose visualization, and other functions of the GraspNet-1Billion dataset.)
+### 4. Configure graspnetAPI (graspnetAPI is a tutorial document for data processing, pose visualization, and other functions of the GraspNet-1Billion dataset.)
 ~~~shell
 git clone https://github.com/graspnet/graspnetAPI.git
 cd graspnetAPI
 pip install .
+~~~
