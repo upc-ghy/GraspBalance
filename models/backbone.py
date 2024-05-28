@@ -1,6 +1,3 @@
-""" PointNet2 backbone for feature learning.
-    Author: Charles R. Qi
-"""
 import os
 import sys
 import torch
@@ -13,10 +10,7 @@ sys.path.append(os.path.join(ROOT_DIR, 'pointnet2'))
 
 from pointnet2_modules import PointnetSAModuleVotes, PointnetFPModule
 
-'''
-in 3 x N
-out 256 x 1024
-'''
+
 class Pointnet2Backbone(nn.Module):
     r"""
        Backbone network for point cloud feature learning.
