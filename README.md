@@ -8,7 +8,7 @@ Object grasping constitutes a fundamental function in robotics. Currently, exist
 ### Real Experiments
 ![Real Robot Grasp](https://github.com/upc-ghy/GraspBalance/raw/main/real_robot_experiment_setup.png)
 #### Franka Grasp Experiment Environment
-~~~shell
+
 1. Ubuntu 20.04 (Our PC is installed with ubuntu system, you can choose other systems according to your needs.)
 
 2. System real time kernel (Installing a real-time kernel is the key to implementing an operating system to drive Franka's real robots. It is recommended to install a real-time kernel with a similar version of the system's own kernel)
@@ -30,8 +30,6 @@ roslaunch panda_moveit_config franka_control.launch robot_ip:=172.16.3.69
 8. hand-eye calibration (Find the relationship between the camera coordinate system and the Franka robot coordinate system)
 
 9. Write Franka and RealSense control code (The algorithm predicts the grasping position in the camera coordinate system, converts it to a position in the Franka robot coordinate system, and controls the robot to move to that position for object grasping and placing into the storage box.)
-
-~~~
 
 
 ### 1. Environment
