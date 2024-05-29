@@ -1,8 +1,3 @@
-/*
-batch version of ball query, modified from the original implementation of official PointNet++ codes.
-Written by Shaoshuai Shi
-All Rights Reserved 2018.
-*/
 
 #include <math.h>
 #include <stdio.h>
