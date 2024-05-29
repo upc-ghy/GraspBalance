@@ -279,8 +279,8 @@ In this paper, K-nearest neighbors (KNN) is primarily used to find the n nearest
 ~~~shell
 # cd YourProject/ and clone our knn code
 git clone https://github.com/upc-ghy/knn.git
-# cd torchKNN
-cd torchKNN
+# cd KNN
+cd KNN
 # install
 sudo python setup.py install
 
@@ -307,13 +307,13 @@ pip install .
 
 ### 5. Generate Clean Scene Data
 ~~~shell
-cd dataset
+cd DataProcessing
 sh command_generate_clean_data.sh
 ~~~
 
 ### 6. Generation Tolerance Label
 ~~~shell
-cd dataset
+cd DataProcessing
 sh command_generate_tolerance_label.sh
 ~~~
 
