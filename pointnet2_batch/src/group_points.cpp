@@ -1,8 +1,3 @@
-/*
-batch version of point grouping, modified from the original implementation of official PointNet++ codes.
-Written by Shaoshuai Shi
-All Rights Reserved 2018.
-*/
 
 #include <torch/serialize/tensor.h>
 #include <cuda.h>
