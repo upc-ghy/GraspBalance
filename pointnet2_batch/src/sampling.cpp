@@ -1,10 +1,3 @@
-/*
-batch version of point sampling and gathering, modified from the original implementation of official PointNet++ codes.
-Written by Shaoshuai Shi
-All Rights Reserved 2018.
-*/
-
-
 #include <torch/serialize/tensor.h>
 #include <ATen/cuda/CUDAContext.h>
 #include <vector>
