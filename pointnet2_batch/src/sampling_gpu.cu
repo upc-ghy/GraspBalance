@@ -1,10 +1,3 @@
-/*
-batch version of point sampling and gathering, modified from the original implementation of official PointNet++ codes.
-Written by Shaoshuai Shi
-All Rights Reserved 2018.
-*/
-
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,11 +7,6 @@ All Rights Reserved 2018.
 
 __global__ void gather_points_kernel_fast(int b, int c, int n, int m, 
     const float *__restrict__ points, const int *__restrict__ idx, float *__restrict__ out) {
-    // points: (B, C, N)
-    // idx: (B, M)
-    // output:
-    //      out: (B, C, M)
-
     int bs_idx = blockIdx.z;
     int c_idx = blockIdx.y;
     int pt_idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -32,11 +20,6 @@ __global__ void gather_points_kernel_fast(int b, int c, int n, int m,
 
 void gather_points_kernel_launcher_fast(int b, int c, int n, int npoints, 
     const float *points, const int *idx, float *out) {
-    // points: (B, C, N)
-    // idx: (B, npoints)
-    // output:
-    //      out: (B, C, npoints)
-
     cudaError_t err;
     dim3 blocks(DIVUP(npoints, THREADS_PER_BLOCK), c, b);  // blockIdx.x(col), blockIdx.y(row)
     dim3 threads(THREADS_PER_BLOCK);
@@ -52,11 +35,6 @@ void gather_points_kernel_launcher_fast(int b, int c, int n, int npoints,
 
 __global__ void gather_points_grad_kernel_fast(int b, int c, int n, int m, const float *__restrict__ grad_out, 
     const int *__restrict__ idx, float *__restrict__ grad_points) {
-    // grad_out: (B, C, M)
-    // idx: (B, M)
-    // output:
-    //      grad_points: (B, C, N)
-
     int bs_idx = blockIdx.z;
     int c_idx = blockIdx.y;
     int pt_idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -71,11 +49,6 @@ __global__ void gather_points_grad_kernel_fast(int b, int c, int n, int m, const
 
 void gather_points_grad_kernel_launcher_fast(int b, int c, int n, int npoints, 
     const float *grad_out, const int *idx, float *grad_points) {
-    // grad_out: (B, C, npoints)
-    // idx: (B, npoints)
-    // output:
-    //      grad_points: (B, C, N)
-
     cudaError_t err;
     dim3 blocks(DIVUP(npoints, THREADS_PER_BLOCK), c, b);  // blockIdx.x(col), blockIdx.y(row)
     dim3 threads(THREADS_PER_BLOCK);
@@ -100,11 +73,6 @@ __device__ void __update(float *__restrict__ dists, int *__restrict__ dists_i, i
 template <unsigned int block_size>
 __global__ void furthest_point_sampling_kernel(int b, int n, int m, 
     const float *__restrict__ dataset, float *__restrict__ temp, int *__restrict__ idxs) {
-    // dataset: (B, N, 3)
-    // tmp: (B, N)
-    // output:
-    //      idx: (B, M)
-
     if (m <= 0) return;
     __shared__ float dists[block_size];
     __shared__ int dists_i[block_size];
@@ -133,9 +101,6 @@ __global__ void furthest_point_sampling_kernel(int b, int n, int m,
         x2 = dataset[k * 3 + 0];
         y2 = dataset[k * 3 + 1];
         z2 = dataset[k * 3 + 2];
-        // float mag = (x2 * x2) + (y2 * y2) + (z2 * z2);
-        // if (mag <= 1e-3)
-        // continue;
 
         float d = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1);
         float d2 = min(d, temp[k]);
@@ -217,11 +182,6 @@ __global__ void furthest_point_sampling_kernel(int b, int n, int m,
 
 void furthest_point_sampling_kernel_launcher(int b, int n, int m, 
     const float *dataset, float *temp, int *idxs) {
-    // dataset: (B, N, 3)
-    // tmp: (B, N)
-    // output:
-    //      idx: (B, M)
-
     cudaError_t err;
     unsigned int n_threads = opt_n_threads(n);
 
