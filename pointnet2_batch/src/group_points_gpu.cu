@@ -1,8 +1,3 @@
-/*
-batch version of point grouping, modified from the original implementation of official PointNet++ codes.
-Written by Shaoshuai Shi
-All Rights Reserved 2018.
-*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,10 +8,6 @@ All Rights Reserved 2018.
 
 __global__ void group_points_grad_kernel_fast(int b, int c, int n, int npoints, int nsample, 
     const float *__restrict__ grad_out, const int *__restrict__ idx, float *__restrict__ grad_points) {
-    // grad_out: (B, C, npoints, nsample)
-    // idx: (B, npoints, nsample)
-    // output:
-    //      grad_points: (B, C, N)
     int bs_idx = blockIdx.z;
     int c_idx = blockIdx.y;
     int index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -32,10 +23,6 @@ __global__ void group_points_grad_kernel_fast(int b, int c, int n, int npoints, 
 
 void group_points_grad_kernel_launcher_fast(int b, int c, int n, int npoints, int nsample, 
     const float *grad_out, const int *idx, float *grad_points) {
-    // grad_out: (B, C, npoints, nsample)
-    // idx: (B, npoints, nsample)
-    // output:
-    //      grad_points: (B, C, N)
     cudaError_t err;
     dim3 blocks(DIVUP(npoints * nsample, THREADS_PER_BLOCK), c, b);  // blockIdx.x(col), blockIdx.y(row)
     dim3 threads(THREADS_PER_BLOCK);
@@ -52,10 +39,6 @@ void group_points_grad_kernel_launcher_fast(int b, int c, int n, int npoints, in
 
 __global__ void group_points_kernel_fast(int b, int c, int n, int npoints, int nsample, 
     const float *__restrict__ points, const int *__restrict__ idx, float *__restrict__ out) {
-    // points: (B, C, N)
-    // idx: (B, npoints, nsample)
-    // output:
-    //      out: (B, C, npoints, nsample)
     int bs_idx = blockIdx.z;
     int c_idx = blockIdx.y;
     int index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -74,16 +57,11 @@ __global__ void group_points_kernel_fast(int b, int c, int n, int npoints, int n
 
 void group_points_kernel_launcher_fast(int b, int c, int n, int npoints, int nsample, 
     const float *points, const int *idx, float *out) {
-    // points: (B, C, N)
-    // idx: (B, npoints, nsample)
-    // output:
-    //      out: (B, C, npoints, nsample)
     cudaError_t err;
     dim3 blocks(DIVUP(npoints * nsample, THREADS_PER_BLOCK), c, b);  // blockIdx.x(col), blockIdx.y(row)
     dim3 threads(THREADS_PER_BLOCK);
 
     group_points_kernel_fast<<<blocks, threads>>>(b, c, n, npoints, nsample, points, idx, out);
-    // cudaDeviceSynchronize();  // for using printf in kernel function
     err = cudaGetLastError();
     if (cudaSuccess != err) {
         fprintf(stderr, "CUDA kernel failed : %s\n", cudaGetErrorString(err));
