@@ -1,5 +1,5 @@
 # GraspBalance
-### Robot Balanced Grasp Pose Detection for Multi-scale Objects
+### Balanced Grasp Pose Detection for Multi-scale Objects with Point Cloud
 
 ![grasp_pose_detection](https://github.com/upc-ghy/GraspBalance/raw/main/grasp_pose_detection.png)
 
