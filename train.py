@@ -11,9 +11,9 @@ from torch.utils.tensorboard import SummaryWriter
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(ROOT_DIR, 'utils'))
-sys.path.append(os.path.join(ROOT_DIR, 'models'))
-sys.path.append(os.path.join(ROOT_DIR, 'pointnet2'))
-sys.path.append(os.path.join(ROOT_DIR, 'dataset'))
+sys.path.append(os.path.join(ROOT_DIR, 'TrainModel'))
+sys.path.append(os.path.join(ROOT_DIR, 'PointNet'))
+sys.path.append(os.path.join(ROOT_DIR, 'DataProcessing'))
 
 from pytorch_utils import BNMomentumScheduler
 from graspnet_dataset import GraspNetDataset
