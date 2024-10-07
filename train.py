@@ -10,7 +10,6 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(ROOT_DIR, 'utils'))
 sys.path.append(os.path.join(ROOT_DIR, 'TrainModel'))
 sys.path.append(os.path.join(ROOT_DIR, 'PointNet'))
 sys.path.append(os.path.join(ROOT_DIR, 'DataProcessing'))
